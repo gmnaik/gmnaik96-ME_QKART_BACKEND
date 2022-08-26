@@ -22,7 +22,6 @@ app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
-
 // Reroute all API request starting with "/v1" route
 app.use("/v1", routes);
 

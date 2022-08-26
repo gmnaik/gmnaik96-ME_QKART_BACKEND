@@ -11,6 +11,21 @@ const bcrypt = require("bcryptjs");
  * @returns {Promise<User>}
  */
 
+ const getUserById = async(userId) => {
+    //const {id} = req.params;
+    //console.log("In getUserById service function");
+    const user = await User.findOne({_id : userId});
+    return user;
+ }
+
+ const getAllUsers = async() => {
+    //const {id} = req.params;
+    //console.log("In getAllUsers service function");
+    const allusers = await User.find({});
+    return allusers;
+ }
+
+ 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUserByEmail(email)
 /**
  * Get user by email
@@ -18,6 +33,13 @@ const bcrypt = require("bcryptjs");
  * @param {string} email
  * @returns {Promise<User>}
  */
+
+ const getUserByEmail = async(email) => {
+    //const {id} = req.params;
+    //console.log("In getUserById service function");
+    const user = await User.findOne({email : email});
+    return user;
+ }
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement createUser(user)
 /**
@@ -42,4 +64,39 @@ const bcrypt = require("bcryptjs");
  * 200 status code on duplicate email - https://stackoverflow.com/a/53144807
  */
 
+ const createUser = async(userBody) => {
+    if(User.isEmailTaken() === true)
+    {
+        throw new ApiError(httpStatus[409],"Email already taken");
+    }
+    else
+    {
+        try{
+            let user = {
+                //_id : userBody._id,
+                walletMoney : userBody.walletMoney,
+                address: userBody.address,
+                name: userBody.name,
+                email: userBody.email,
+                password: userBody.password,   
+            };
+            const newUser = await User.create(user);
+            //const result = newUser.save();
+            console.log("New User from createUser:",newUser);
+            return newUser;
+        }
+        catch(err){
+            console.log("Create user error:",err);
+        }
+    }
+ 
+ }
+
+
+ module.exports = {
+    getUserById,
+    getAllUsers,
+    getUserByEmail,
+    createUser,
+};
 

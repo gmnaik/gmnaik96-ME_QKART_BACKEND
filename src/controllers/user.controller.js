@@ -38,10 +38,36 @@ const { userService } = require("../services");
  * @returns {User | {address: String}}
  *
  */
-const getUser = catchAsync(async (req, res) => {
-});
+const getUser = async (req, res) => {
+  try{ 
+    console.log("Hi from get user function once more");
+    const {userId} = req.params;
+    const user = await userService.getUserById(userId);
+    // if(user)
+    // {
+    res.status(200).json(user);
+    //}
+  }
+  catch(err){
+    res.status(400).json({error:"User not found"});
+  }
+  
+};
+
+const getallusers = async (req,res) => {
+  try{
+    const allusers = await userService.getAllUsers();
+    res.status(200);
+    res.json(allusers);
+  }
+  catch(err){
+    res.status(404);
+    res.json({error:"Couldnot fetch users from database:",err});
+  }
+}
 
 
 module.exports = {
   getUser,
+  getallusers,
 };
