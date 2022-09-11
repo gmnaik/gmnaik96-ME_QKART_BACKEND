@@ -1,3 +1,4 @@
+require("dotenv").config();
 const dotenv = require('dotenv');
 const path = require('path');
 const Joi = require('joi');
@@ -5,6 +6,7 @@ const Joi = require('joi');
 const DEFAULT_WALLET_MONEY = 500;
 const DEFAULT_PAYMENT_OPTION = "PAYMENT_OPTION_DEFAULT";
 const DEFAULT_ADDRESSS = "ADDRESS_NOT_SET";
+//const MONGODB_URL = "mongodb://127.0.0.1:27017/qkart";
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 

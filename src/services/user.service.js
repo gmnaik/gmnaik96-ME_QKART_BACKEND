@@ -2,6 +2,7 @@ const { User } = require("../models");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
+//const User = require("../models/user.model");
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUserById(id)
 /**
@@ -10,7 +11,15 @@ const bcrypt = require("bcryptjs");
  * @param {String} id
  * @returns {Promise<User>}
  */
+    const getUserById = async(userId) => {
+        //const {id} = req.params;
+        const getuser = await User.findOne({_id : userId});
+        return getuser;
+    }
 
+    const getUsers = async () => {
+        return await User.find({});
+    }
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUserByEmail(email)
 /**
  * Get user by email
@@ -43,3 +52,7 @@ const bcrypt = require("bcryptjs");
  */
 
 
+module.exports = {
+    getUserById,
+    getUsers,
+};

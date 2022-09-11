@@ -12,6 +12,22 @@ const userSchema = mongoose.Schema(
       trim: true,
     },
     email: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength:50,
+      validate: (isEmailValid) => validator.isEmailValid(isEmailValid),
+      statics: {async isEmailTaken(email){
+        const isemailpresent = await User.find({email:email});
+        if(isemailpresent) 
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }}
     },
     password: {
       type: String,
@@ -24,9 +40,14 @@ const userSchema = mongoose.Schema(
       },
     },
     walletMoney: {
+      type: Number,
+      required: true,
+      default: 500,
     },
     address: {
       type: String,
+      required: false,
+      trim: false,
       default: config.default_address,
     },
   },
@@ -42,17 +63,29 @@ const userSchema = mongoose.Schema(
  * @param {string} email - The user's email
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function (email) {
-};
+  // userSchema.statics.isEmailTaken = async function (email) {
+  //   const isemailpresent = await User.find({email:email});
+  //   if(isemailpresent) 
+  //   {
+  //     return true;
+  //   }
+  //   else
+  //   {
+  //     return false;
+  //   }
+  // };
 
 
-
+ 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS
 /*
- * Create a Mongoose model out of userSchema and export the model as "User"
+ * Create a Mongoose model out of userSchema and export the model as ""
  * Note: The model should be accessible in a different module when imported like below
  * const User = require("<user.model file path>").User;
  */
 /**
  * @typedef User
  */
+ const User = mongoose.model("users",userSchema);
+
+module.exports.User = User;
