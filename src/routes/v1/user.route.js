@@ -26,3 +26,5 @@ router.get("/allusers",userController.getallusers);
 router.get("/:userId",auth,validate(userValidation.getUser) ,userController.getUser);
 
 module.exports = router;
+
+
