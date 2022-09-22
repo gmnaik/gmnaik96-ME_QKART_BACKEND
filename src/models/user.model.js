@@ -2,20 +2,7 @@ const mongoose = require("mongoose");
 // NOTE - "validator" external library and not the custom middleware at src/middlewares/validate.js
 const validator = require("validator");
 const config = require("../config/config");
-
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Complete userSchema, a Mongoose schema for "users" collection
-// userSchema.statics.isEmailTaken = async function (email) {
-//   const isemailpresent = await User.find({email:email});
-//   if(isemailpresent) 
-//   {
-//     return true;
-//   }
-//   else
-//   {
-//     return false;
-//   }
-// }
-
+const bcrypt = require("bcrypt");
 
 const userSchema = mongoose.Schema(
   {
@@ -29,19 +16,6 @@ const userSchema = mongoose.Schema(
       required: true,
       trim: true,
       validate: (isvalidEmail) => validator.isEmail(isvalidEmail),
-      //statics: (isEmailtaken) => this.isEmailTaken(isEmailtaken),
-      // statics: {async isEmailTaken(email){
-      //   const isemailpresent = await User.find({email:email});
-      //   if(isemailpresent) 
-      //   {
-      //     return true;
-      //   }
-      //   else
-      //   {
-      //     return false;
-      //   }
-      // }}
-      //statics: isEmailTaken(email),
     },
     password: {
       type: String,
@@ -74,13 +48,16 @@ const userSchema = mongoose.Schema(
   }
 );
 
+
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement the isEmailTaken() static method
+
 /**
  * Check if email is taken
  * @param {string} email - The user's email
  * @returns {Promise<boolean>}
  */
 userSchema.statics.isEmailTaken = async function (email) {
+
   const isemailpresent = await this.find({email:email});
   if(isemailpresent) 
   {
@@ -94,15 +71,21 @@ userSchema.statics.isEmailTaken = async function (email) {
 
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS
-/*
- * Create a Mongoose model out of userSchema and export the model as "User"
- * Note: The model should be accessible in a different module when imported like below
- * const User = require("<user.model file path>").User;
- */
+
 /**
- * @typedef User
+ * Check if entered password matches the user's password
+ * @param {string} password
+ * @returns {Promise<boolean>}
  */
+userSchema.methods.isPasswordMatch = async function (password) {
+  const user = this
+  const isPasswordValid = await bcrypt.compare(password,user.password)
+  return isPasswordValid;
+};
 
- const User = mongoose.model("users",userSchema);
+const User = mongoose.model("users", userSchema);
 
- module.exports.User = User;
+module.exports.User = User;
+
+
+

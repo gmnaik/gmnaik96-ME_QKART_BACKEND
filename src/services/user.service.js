@@ -4,6 +4,7 @@ const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUserById(id)
+
 /**
  * Get User by id
  * - Fetch user object from Mongo using the "_id" field and return user object
@@ -22,6 +23,7 @@ const bcrypt = require("bcryptjs");
     //const {id} = req.params;
     //console.log("In getAllUsers service function");
     const allusers = await User.find({});
+    //console.log("In getAllUsers service function:",allusers);
     return allusers;
  }
 
@@ -42,6 +44,7 @@ const bcrypt = require("bcryptjs");
  }
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement createUser(user)
+
 /**
  * Create a user
  *  - check if the user with the email already exists using `User.isEmailTaken()` method
@@ -67,7 +70,7 @@ const bcrypt = require("bcryptjs");
  const createUser = async(userBody) => {
     if(User.isEmailTaken() === true)
     {
-        throw new ApiError(httpStatus[409],"Email already taken");
+        throw new ApiError(httpStatus[200],'Email already taken');
     }
     else
     {
@@ -78,7 +81,7 @@ const bcrypt = require("bcryptjs");
                 address: userBody.address,
                 name: userBody.name,
                 email: userBody.email,
-                password: userBody.password,   
+                password: userBody.hashedpassword,   
             };
             const newUser = await User.create(user);
             //const result = newUser.save();
@@ -99,4 +102,5 @@ const bcrypt = require("bcryptjs");
     getUserByEmail,
     createUser,
 };
+
 
