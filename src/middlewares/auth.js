@@ -15,7 +15,8 @@ const { jwt } = require("../config/config");
  */
  const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
   if (err || info || !user) {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
+    reject(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
+  //reject;
   }
   req.user = user;
 

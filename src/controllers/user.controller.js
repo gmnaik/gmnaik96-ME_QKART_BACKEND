@@ -52,18 +52,22 @@ const { userService } = require("../services");
  */
 
 const getUser = catchAsync(async (req, res) => { 
-    console.log("Hi from get user function once more");
+    //console.log("Hi from get user function once more");
     const {userId} = req.params;
     const user = await userService.getUserById(userId);
     if(!user)
     {
       throw new ApiError(httpStatus[404],"Not found")  
     }
-    console.log("User email",user.email)
-    console.log("User email URL",req.user.email)
+    console.log("User in controller",user);
+    console.log("User from request",req.user);
     if(user.email !== req.user.email)
     {
-      throw new ApiError(httpStatus[403],"Forbidden")
+      throw new ApiError(
+      httpStatus.FORBIDDEN,
+      "User not authorized to access this resource"
+    );
+
     }
     res.status(200).json(user);
   }
