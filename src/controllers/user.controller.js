@@ -3,8 +3,8 @@ const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
 const { userService } = require("../services");
 
-//const {getUserById} = require("../services/user.service");
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUser() function
+
 /**
  * Get user details
  *  - Use service layer to get User data
@@ -14,6 +14,9 @@ const { userService } = require("../services");
  *  - If data exists for the provided "userId", return 200 status code and the object
  *  - If data doesn't exist, throw an error using `ApiError` class
  *    - Status code should be "404 NOT FOUND"
+ *    - Error message, "User not found"
+ *  - If the user whose token is provided and user whose data to be fetched don't match, throw `ApiError`
+ *    - Status code should be "403 FORBIDDEN"
  *    - Error message, "User not found"
  *
  * 
@@ -34,36 +37,46 @@ const { userService } = require("../services");
  *
  * Example response status codes:
  * HTTP 200 - If request successfully completes
+ * HTTP 403 - If request data doesn't match that of authenticated user
  * HTTP 404 - If user entity not found in DB
  * 
  * @returns {User | {address: String}}
  *
  */
 
-console.log("Inside controllers/user.controller.js");
-const getUser = catchAsync(async (req, res) => {
-  console.log("Inside controller");
- 
-    const { userId } = req.params;
-    const users = await userService.getUsers();
-    console.log("All users", users);
-    console.log("Inside controller",userId);
-    const getUser = await userService.getUserById(userId);
-    if(!getUser)
+const getUser = catchAsync(async (req, res) => { 
+    // console.log("Hi from get user function once more");
+    const {userId} = req.params;
+    const user = await userService.getUserById(userId);
+    if(!user)
     {
-      throw new ApiError(httpStatus.NOT_FOUND,"User not found");
+      throw new ApiError(httpStatus[404],"Not found")  
     }
-    // res.json(getUser);
-    // res.status(200);
-    res.status(200).json(getUser);
+    // console.log("User email",user.email)
+    // console.log("User email URL",req.user.email)
+    if(user.email !== req.user.email)
+    {
+      throw new ApiError(httpStatus[403],"Forbidden")
+    }
+    res.send(user);
+  }
   
-  // catch(err)
-  // {
-  //   res.status(404).json({error:"User not found"});
-  // }
-});
+);
+
+const getallusers = async (req,res) => {
+  try{
+    const allusers = await userService.getAllUsers();
+    res.status(200);
+    res.json(allusers);
+  }
+  catch(err){
+    res.status(404);
+    res.json({error:"Couldnot fetch users from database:",err});
+  }
+}
 
 
 module.exports = {
   getUser,
+  getallusers,
 };

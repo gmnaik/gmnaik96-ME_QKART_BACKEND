@@ -11,7 +11,7 @@ specifiers:
   core-js: ^3.0.0
   cors: ^2.8.5
   cross-env: ^7.0.0
-  dotenv: ^8.6.0
+  dotenv: ^8.2.0
   eslint: ^7.11.0
   eslint-config-airbnb-base: ^14.0.0
   eslint-config-prettier: ^6.4.0
@@ -27,12 +27,12 @@ specifiers:
   joi: ^17.3.0
   jsonwebtoken: ^8.5.1
   mockingoose: ~2.13.2
-  moment: ^2.29.1
+  moment: ^2.29.4
   mongoose: ^5.10.9
   morgan: ^1.9.1
   node-mocks-http: ^1.8.0
-  nodemon: ^2.0.7
-  passport: ^0.4.0
+  nodemon: ^2.0.19
+  passport: ^0.6.0
   passport-jwt: ^4.0.0
   pm2: ^4.5.0
   prettier: ^2.0.5
@@ -58,7 +58,7 @@ dependencies:
   moment: 2.29.4
   mongoose: 5.13.14
   morgan: 1.10.0
-  passport: 0.4.1
+  passport: 0.6.0
   passport-jwt: 4.0.0
   pm2: 4.5.6
   typescript: 3.9.10
@@ -5905,12 +5905,13 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: false
 
-  /passport/0.4.1:
-    resolution: {integrity: sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==}
+  /passport/0.6.0:
+    resolution: {integrity: sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==}
     engines: {node: '>= 0.4.0'}
     dependencies:
       passport-strategy: 1.0.0
       pause: 0.0.1
+      utils-merge: 1.0.1
     dev: false
 
   /path-exists/2.1.0:
