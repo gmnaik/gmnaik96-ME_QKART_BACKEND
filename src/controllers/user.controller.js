@@ -52,11 +52,15 @@ const getUser = catchAsync(async (req, res) => {
     {
       throw new ApiError(httpStatus[404],"Not found")  
     }
-    // console.log("User email",user.email)
-    // console.log("User email URL",req.user.email)
+    console.log("User in controller",user);
+    console.log("User from request",req.user);
     if(user.email !== req.user.email)
     {
-      throw new ApiError(httpStatus[403],"Forbidden")
+      throw new ApiError(
+      httpStatus.FORBIDDEN,
+      "User not authorized to access this resource"
+    );
+
     }
     res.send(user);
   }
