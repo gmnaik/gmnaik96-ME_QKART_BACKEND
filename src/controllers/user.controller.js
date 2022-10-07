@@ -16,12 +16,9 @@ const { userService } = require("../services");
  *  - If data doesn't exist, throw an error using `ApiError` class
  *    - Status code should be "404 NOT FOUND"
  *    - Error message, "User not found"
-<<<<<<< HEAD
-=======
  *  - If the user whose token is provided and user whose data to be fetched don't match, throw `ApiError`
  *    - Status code should be "403 FORBIDDEN"
  *    - Error message, "User not found"
->>>>>>> fe4cd93bd3608cf6711d97e1d0bacfcd4371248d
  *
  * 
  * Request url - <workspace-ip>:8082/v1/users/6010008e6c3477697e8eaba3
@@ -41,10 +38,7 @@ const { userService } = require("../services");
  *
  * Example response status codes:
  * HTTP 200 - If request successfully completes
-<<<<<<< HEAD
-=======
  * HTTP 403 - If request data doesn't match that of authenticated user
->>>>>>> fe4cd93bd3608cf6711d97e1d0bacfcd4371248d
  * HTTP 404 - If user entity not found in DB
  * 
  * @returns {User | {address: String}}
@@ -52,15 +46,15 @@ const { userService } = require("../services");
  */
 
 const getUser = catchAsync(async (req, res) => { 
-    console.log("Hi from get user function once more");
+    //console.log("Hi from get user function once more");
     const {userId} = req.params;
     const user = await userService.getUserById(userId);
     if(!user)
     {
       throw new ApiError(httpStatus[404],"Not found")  
     }
-    console.log("User email",user.email)
-    console.log("User email URL",req.user.email)
+    console.log("User in controller",user);
+    console.log("User from request",req.user);
     if(user.email !== req.user.email)
     {
       throw new ApiError(httpStatus[403],"Forbidden")
