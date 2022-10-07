@@ -69,6 +69,8 @@ const { User } = require("../models");
         console.log("Error in registering user:",err);
       }
   };
+const register = catchAsync(async (req, res) => {
+});
 
 /**
  * Perform the following steps:
@@ -118,6 +120,8 @@ const login = catchAsync (async (req, res) =>
 }
 );
 
+const login = catchAsync(async (req, res) => {
+});
 
 module.exports = {
   register,

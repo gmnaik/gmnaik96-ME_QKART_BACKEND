@@ -21,6 +21,7 @@ const { jwt } = require("../config/config");
   req.user = user;
 
   resolve();
+const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
 };
 
 /**
