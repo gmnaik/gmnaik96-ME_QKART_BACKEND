@@ -48,9 +48,6 @@ const userSchema = mongoose.Schema(
   }
 );
 
-
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement the isEmailTaken() static method
-
 /**
  * Check if email is taken
  * @param {string} email - The user's email

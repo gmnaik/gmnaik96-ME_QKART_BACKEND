@@ -3,8 +3,6 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
 
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUserById(id)
-
 /**
  * Get User by id
  * - Fetch user object from Mongo using the "_id" field and return user object
@@ -95,12 +93,35 @@ const bcrypt = require("bcryptjs");
  
  }
 
+// TODO: CRIO_TASK_MODULE_CART - Implement getUserAddressById()
+/**
+ * Get subset of user's data by id
+ * - Should fetch from Mongo only the email and address fields for the user apart from the id
+ *
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getUserAddressById = async (id) => {
+};
 
- module.exports = {
+/**
+ * Set user's shipping address
+ * @param {String} email
+ * @returns {String}
+ */
+const setAddress = async (user, newAddress) => {
+  user.address = newAddress;
+  await user.save();
+
+  return user.address;
+};
+
+module.exports = {
     getUserById,
     getAllUsers,
     getUserByEmail,
     createUser,
+    getUserAddressById,
+    setAddress
 };
-
 
