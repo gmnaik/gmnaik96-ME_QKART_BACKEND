@@ -2,12 +2,9 @@ const express = require("express");
 const validateSchema = require("../../middlewares/validate");
 const registerBodyValidationSchema = require("../../validations/auth.validation");
 const authController = require("../../controllers/auth.controller");
-//const passport = require("passport");
-//require('./config/passport')(passport);
 
 const validateBodyRegisterRequestMiddleware = validateSchema(registerBodyValidationSchema.register);
 const validateBodyLoginRequestMiddleware = validateSchema(registerBodyValidationSchema.login);
-//const passportmiddleware = passport.authenticate("jwt", {session:false});
 
 const router = express.Router();
 

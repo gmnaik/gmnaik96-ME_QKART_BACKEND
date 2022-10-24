@@ -57,6 +57,7 @@ const { User } = require("../models");
           if(newuserregister)
           {
             const authtokens = await tokenService.generateAuthTokens(newuserregister._id);
+            console.log("Generated auth token in register",authtokens);
             res.status(201).json({user : newuserregister, tokens : authtokens});
           }
           else
@@ -106,8 +107,9 @@ const login = catchAsync (async (req, res) =>
     const result = await authService.loginUserWithEmailAndPassword(email,password);
     if(result)
     {
-      console.log("Inside login if");
+      //console.log("Inside login if");
       const generateauthtokens = await tokenService.generateAuthTokens(result);
+      console.log("Generated auth token in login",generateauthtokens);
       res.status(200).json({user:result, tokens: generateauthtokens});
     }
     // else

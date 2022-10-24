@@ -54,18 +54,39 @@ const { userService } = require("../services");
 const getUser = catchAsync(async (req, res) => { 
     //console.log("Hi from get user function once more");
     const {userId} = req.params;
-    const user = await userService.getUserById(userId);
-    if(!user)
+    const userAddress = req.query.q;
+    //console.log("User address from URL",userAddress);
+
+    if(userAddress)
     {
-      throw new ApiError(httpStatus[404],"Not found")  
+      const user = await userService.getUserAddressById(userId);
+      if(!user)
+      {
+        throw new ApiError(httpStatus[404],"Not found");
+      }
+
+      if(user.email !== req.user.email)
+      {
+        throw new ApiError(httpStatus.FORBIDDEN,"Forbidden")
+      }
+       
+      res.status(200).json({"address":user.address});
     }
-    console.log("User in controller",user);
-    console.log("User from request",req.user);
-    if(user.email !== req.user.email)
+    else
     {
-      throw new ApiError(httpStatus[403],"Forbidden")
+      const user = await userService.getUserById(userId);
+      if(!user)
+      {
+        throw new ApiError(httpStatus[404],"Not found")  
+      }
+      //console.log("User in controller",user);
+      //console.log("User from request",req.user);
+      if(user.email !== req.user.email)
+      {
+        throw new ApiError(httpStatus.FORBIDDEN,"Forbidden");
+      }
+      res.status(200).json(user);
     }
-    res.status(200).json(user);
   }
   
 );

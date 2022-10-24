@@ -18,7 +18,7 @@ const User = require("../models/user.model");
  */
 
 const hashPassword = async(password) => {
-  console.log("Inside hashpassword function");
+  //console.log("Inside hashpassword function");
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password,salt);
   return hashedPassword;
@@ -35,7 +35,7 @@ const hashPassword = async(password) => {
 const loginUserWithEmailAndPassword = async (email, password) => 
 {
   const user = await userService.getUserByEmail(email);
-  console.log("Inside loginUserWithEmailAndPassword function");
+  
   if(!user)
   {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Email is not registered");

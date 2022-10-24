@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.get("/allusers",userController.getallusers);
 router.get("/:userId",auth,validate(userValidation.getUser) ,userController.getUser);
+router.get("/:userId?q=address",auth,validate(userValidation.getUser), userController.getUser);
 router.put(
   "/:userId",
   auth,

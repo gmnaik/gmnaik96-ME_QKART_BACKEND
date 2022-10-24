@@ -83,7 +83,7 @@ const bcrypt = require("bcryptjs");
             };
             const newUser = await User.create(user);
             //const result = newUser.save();
-            console.log("New User from createUser:",newUser);
+            //console.log("New User from createUser:",newUser);
             return newUser;
         }
         catch(err){
@@ -102,6 +102,9 @@ const bcrypt = require("bcryptjs");
  * @returns {Promise<User>}
  */
 const getUserAddressById = async (id) => {
+    const user = await User.findOne({"_id" : id},{"address":1,"email":1});
+    
+    return user;
 };
 
 /**
@@ -110,8 +113,10 @@ const getUserAddressById = async (id) => {
  * @returns {String}
  */
 const setAddress = async (user, newAddress) => {
+  //console.log("Old user address:",user);
   user.address = newAddress;
   await user.save();
+  //console.log("New user address:",user)
 
   return user.address;
 };
