@@ -2,6 +2,7 @@ const { User } = require("../models");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
+//const User = require("../models/user.model");
 
 /**
  * Get User by id
@@ -130,3 +131,9 @@ module.exports = {
     setAddress
 };
 
+
+
+// module.exports = {
+//     getUserById,
+//     getUsers,
+// };

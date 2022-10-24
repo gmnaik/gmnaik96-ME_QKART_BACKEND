@@ -32,8 +32,8 @@ const jwtOptions = {
  const jwtVerify = async (payload, done) => {
   try {
     if (payload.type !== tokenTypes.ACCESS) {
-      // FIXME - do `done(null, false, {message: "Invalid token type"})` instead?
-      throw new Error("Invalid token type");
+    done(null, false, {message: "Invalid token type"})
+   //   throw new Error("Invalid token type");
     }
     const user = await User.findById(payload.sub);
     if (!user) {

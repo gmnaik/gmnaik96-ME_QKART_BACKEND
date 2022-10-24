@@ -44,6 +44,10 @@ app.get("/usersssss",(req,res) => {
 // TODO: CRIO_TASK_MODULE_AUTH - Initialize passport and add "jwt" authentication strategy
 
 // Reroute all API request starting with "/v1" route
+app.get("/", (req,res) => {
+    res.send('<h1>Hello hi how are you </h1>');
+    console.log("Inside / url request");
+})
 app.use("/v1", routes);
 
 // send back a 404 error for any unknown api request

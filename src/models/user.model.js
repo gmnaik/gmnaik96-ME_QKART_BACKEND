@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 // NOTE - "validator" external library and not the custom middleware at src/middlewares/validate.js
 const validator = require("validator");
 const config = require("../config/config");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema(
   {
@@ -67,8 +67,13 @@ userSchema.statics.isEmailTaken = async function (email) {
 }
 
 
+ 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS
-
+/*
+ * Create a Mongoose model out of userSchema and export the model as ""
+ * Note: The model should be accessible in a different module when imported like below
+ * const User = require("<user.model file path>").User;
+ */
 /**
  * Check if entered password matches the user's password
  * @param {string} password
@@ -80,7 +85,7 @@ userSchema.methods.isPasswordMatch = async function (password) {
   return isPasswordValid;
 };
 
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports.User = User;
 
