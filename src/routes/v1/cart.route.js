@@ -13,7 +13,7 @@ router.post(
   auth,
   validate(cartValidation.addProductToCart),
   cartController.addProductToCart
-);
+);  
 
 router.put(
   "/",
