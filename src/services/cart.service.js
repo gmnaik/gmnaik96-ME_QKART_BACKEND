@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { Cart, Product } = require("../models");
+const { User, Cart, Product } = require("../models");
 const ApiError = require("../utils/ApiError");
 const config = require("../config/config");
 
@@ -249,6 +249,61 @@ const deleteProductFromCart = async (user, productId) => {
  * @throws {ApiError} when cart is invalid
  */
 const checkout = async (user) => {
+  //console.log("In checkout function:",user);
+  
+  //const userPresent = await User.findOne({email: user.email});
+  const userCartPresent = await Cart.findOne({email: user.email});
+  
+  //console.log("User is present",userPresent);
+
+  const addressIsSet = await user.hasSetNonDefaultAddress();
+  //console.log("User.hasSetNonDefaultAddress",addressIsSet);
+
+  if(!addressIsSet)
+  {
+    throw new ApiError(httpStatus.BAD_REQUEST,'User need to add address');
+  }
+
+  if(!userCartPresent)
+  {
+    throw new ApiError(httpStatus.NOT_FOUND,"User does not have a cart");
+  }
+
+  let cartProductList = userCartPresent.cartItems;
+  //console.log("Products in cart count",cartProductList.length);
+  if (cartProductList.length == 0)
+  {
+    throw new ApiError(httpStatus.BAD_REQUEST,"Cart is empty.Plz add products to checkout");
+  }
+  else
+  {
+    let cartTotal = 0;
+    let remainingBalanceAfterCheckOut;
+    for(let i=0;i<cartProductList.length;i++)
+    {
+      //console.log("Checkout func:",cartProductList[i]);
+      cartTotal = cartTotal + (cartProductList[i].product.cost * cartProductList[i].quantity);
+      //console.log("Cart total:",cartTotal);
+    }
+    //console.log("Wallet money",user.walletMoney);
+
+    if(cartTotal > user.walletMoney)
+    {
+      throw new ApiError(httpStatus.BAD_REQUEST,"Wallet balance is insufficient.Plz add money in wallet");
+    }
+    else
+    {
+      remainingBalanceAfterCheckOut = user.walletMoney - cartTotal;
+      user.walletMoney = remainingBalanceAfterCheckOut;
+      await user.save();
+      cartProductList.splice(0,cartProductList.length);
+      await userCartPresent.save();
+    }
+  }
+  //console.log("User:",user);
+  //console.log("User Cart:",userCartPresent);
+  
+  return userCartPresent;
 };
 
 module.exports = {

@@ -21,6 +21,11 @@ const cartSchema = mongoose.Schema(
   },
   {
     timestamps: false,
+  },
+  {
+    toJSON: {
+      versionKey:false,
+    }
   }
 );
 

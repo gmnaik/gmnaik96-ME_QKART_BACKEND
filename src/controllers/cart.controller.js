@@ -1,6 +1,7 @@
 const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const { cartService } = require("../services");
+const { reset } = require("nodemon");
 
 /**
  * Fetch the cart details
@@ -81,11 +82,14 @@ const updateProductInCart = catchAsync(async (req, res) => {
  * Checkout user's cart
  */
 const checkout = catchAsync(async (req, res) => {
-   await cartService.checkout();
-  return (
-    res
-      .send()
-  );
+  console.log("Checkout controller",req.user);
+  const checkOutCart = await cartService.checkout(req.user);
+  console.log("Checkout controller output:",checkOutCart);
+  
+  //res.send(checkOutCart);
+  // res.status(204);
+  // res.json({checkOutCart: checkOutCart})
+  res.status(204).send(checkOutCart);
 });
 
 module.exports = {

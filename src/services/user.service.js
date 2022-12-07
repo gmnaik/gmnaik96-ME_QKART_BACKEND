@@ -131,9 +131,3 @@ module.exports = {
     setAddress
 };
 
-
-
-// module.exports = {
-//     getUserById,
-//     getUsers,
-// };

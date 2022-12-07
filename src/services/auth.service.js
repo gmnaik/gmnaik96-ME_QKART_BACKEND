@@ -47,16 +47,6 @@ const loginUserWithEmailAndPassword = async (email, password) =>
       throw new ApiError(httpStatus.UNAUTHORIZED, "Password is wrong");
     }
     return user;
-    // if(isPasswordValid)
-    // {
-    //   console.log("Inside loginUserWithEmailAndPassword if");
-    //   return user;
-    // }
-    // else
-    // {
-    //   console.log("Inside loginUserWithEmailAndPassword else");
-    //   throw new ApiError(httpStatus.UNAUTHORIZED, "Password doesnot match");
-    // }
  
 };
 
