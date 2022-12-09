@@ -3,12 +3,13 @@ const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
 const { userService } = require("../services");
 
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUser() function
-
+// TODO: CRIO_TASK_MODULE_CART - Update function to process url with query params
 /**
  * Get user details
  *  - Use service layer to get User data
  * 
+ *  - If query param, "q" equals "address", return only the address field of the user
+ *  - Else,
  *  - Return the whole user object fetched from Mongo
 
  *  - If data exists for the provided "userId", return 200 status code and the object
@@ -51,24 +52,41 @@ const { userService } = require("../services");
  */
 
 const getUser = catchAsync(async (req, res) => { 
-    // console.log("Hi from get user function once more");
+    //console.log("Hi from get user function once more");
     const {userId} = req.params;
-    const user = await userService.getUserById(userId);
-    if(!user)
-    {
-      throw new ApiError(httpStatus[404],"Not found")  
-    }
-    console.log("User in controller",user);
-    console.log("User from request",req.user);
-    if(user.email !== req.user.email)
-    {
-      throw new ApiError(
-      httpStatus.FORBIDDEN,
-      "User not authorized to access this resource"
-    );
+    const userAddress = req.query.q;
+    //console.log("User address from URL",userAddress);
 
+    if(userAddress)
+    {
+      const user = await userService.getUserAddressById(userId);
+      if(!user)
+      {
+        throw new ApiError(httpStatus[404],"Not found");
+      }
+
+      if(user.email !== req.user.email)
+      {
+        throw new ApiError(httpStatus.FORBIDDEN,"Forbidden")
+      }
+       
+      res.status(200).json({"address":user.address});
     }
-    res.send(user);
+    else
+    {
+      const user = await userService.getUserById(userId);
+      if(!user)
+      {
+        throw new ApiError(httpStatus[404],"Not found")  
+      }
+      //console.log("User in controller",user);
+      //console.log("User from request",req.user);
+      if(user.email !== req.user.email)
+      {
+        throw new ApiError(httpStatus.FORBIDDEN,"Forbidden");
+      }
+      res.status(200).json(user);
+    }
   }
   
 );
@@ -85,12 +103,6 @@ const getallusers = async (req,res) => {
   }
 }
 
-
-module.exports = {
-  getUser,
-  getallusers,
-const getUser = catchAsync(async (req, res) => {
-});
 
 const setAddress = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
@@ -112,7 +124,9 @@ const setAddress = catchAsync(async (req, res) => {
   });
 });
 
+
 module.exports = {
   getUser,
-  setAddress,
-};
+  getallusers,
+  setAddress
+}

@@ -7,7 +7,7 @@ let server;
 // const PORT=8082;
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Create Mongo connection and get the express app to listen on config.port
 //console.log("Port is",config.port);
-app.listen(config.port , () => {
+app.listen(config.port,config.mongoose.options, () => {
     console.log('Started to listen on port',config.port);
 });
 

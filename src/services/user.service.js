@@ -4,8 +4,6 @@ const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
 //const User = require("../models/user.model");
 
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUserById(id)
-
 /**
  * Get User by id
  * - Fetch user object from Mongo using the "_id" field and return user object
@@ -86,7 +84,7 @@ const bcrypt = require("bcryptjs");
             };
             const newUser = await User.create(user);
             //const result = newUser.save();
-            console.log("New User from createUser:",newUser);
+            //console.log("New User from createUser:",newUser);
             return newUser;
         }
         catch(err){
@@ -96,20 +94,6 @@ const bcrypt = require("bcryptjs");
  
  }
 
-
- module.exports = {
-    getUserById,
-    getAllUsers,
-    getUserByEmail,
-    createUser,
-};
-
-
-
-// module.exports = {
-//     getUserById,
-//     getUsers,
-// };
 // TODO: CRIO_TASK_MODULE_CART - Implement getUserAddressById()
 /**
  * Get subset of user's data by id
@@ -119,6 +103,9 @@ const bcrypt = require("bcryptjs");
  * @returns {Promise<User>}
  */
 const getUserAddressById = async (id) => {
+    const user = await User.findOne({"_id" : id},{"address":1,"email":1});
+    
+    return user;
 };
 
 /**
@@ -127,9 +114,20 @@ const getUserAddressById = async (id) => {
  * @returns {String}
  */
 const setAddress = async (user, newAddress) => {
+  //console.log("Old user address:",user);
   user.address = newAddress;
   await user.save();
+  //console.log("New user address:",user)
 
   return user.address;
+};
+
+module.exports = {
+    getUserById,
+    getAllUsers,
+    getUserByEmail,
+    createUser,
+    getUserAddressById,
+    setAddress
 };
 

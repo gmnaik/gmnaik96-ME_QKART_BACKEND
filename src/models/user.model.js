@@ -48,9 +48,6 @@ const userSchema = mongoose.Schema(
   }
 );
 
-
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement the isEmailTaken() static method
-
 /**
  * Check if email is taken
  * @param {string} email - The user's email
@@ -88,9 +85,28 @@ userSchema.methods.isPasswordMatch = async function (password) {
   return isPasswordValid;
 };
 
-const User = mongoose.model("User", userSchema);
 
-module.exports.User = User;
+/**
+ * Check if user have set an address other than the default address
+ * - should return true if user has set an address other than default address
+ * - should return false if user's address is the default address
+ *
+ * @returns {Promise<boolean>}
+ */
+userSchema.methods.hasSetNonDefaultAddress = async function () {
+  const user = this;
+  return user.address !== config.default_address;
+};
 
+/*
+ * Create a Mongoose model out of userSchema and export the model as "User"
+ * Note: The model should be accessible in a different module when imported like below
+ * const User = require("<user.model file path>").User;
+ */
+/**
+ * @typedef User
+ */
 
+ const User = mongoose.model("User", userSchema);
 
+ module.exports.User = User;

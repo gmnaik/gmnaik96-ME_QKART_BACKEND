@@ -1,6 +1,7 @@
 const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const { cartService } = require("../services");
+const { reset } = require("nodemon");
 
 /**
  * Fetch the cart details
@@ -42,13 +43,9 @@ const getCart = catchAsync(async (req, res) => {
  *
  */
 const addProductToCart = catchAsync(async (req, res) => {
-  const cart = await cartService.addProductToCart(
-    req.user,
-    req.body.productId,
-    req.body.quantity
-  );
-
-  res.status(httpStatus.CREATED).send(cart);
+  const cart = await cartService.addProductToCart(req.user,req.body.productId,req.body.quantity);
+    console.log("Result:",cart);
+    res.status(201).send(cart);
 });
 
 // TODO: CRIO_TASK_MODULE_CART - Implement updateProductInCart()
@@ -68,11 +65,36 @@ const addProductToCart = catchAsync(async (req, res) => {
  *
  */
 const updateProductInCart = catchAsync(async (req, res) => {
+  let quantityValue = req.body.quantity;
+  if(quantityValue > 0)
+  {
+    const updateCart = await cartService.updateProductInCart(req.user,req.body.productId,req.body.quantity);
+    res.status(200).send(updateCart);
+  }
+  else
+  {
+    const deleteCart = await cartService.deleteProductFromCart(req.user,req.body.productId);
+    res.status(204).send(deleteCart);
+  }
 });
 
+/**
+ * Checkout user's cart
+ */
+const checkout = catchAsync(async (req, res) => {
+  console.log("Checkout controller",req.user);
+  const checkOutCart = await cartService.checkout(req.user);
+  console.log("Checkout controller output:",checkOutCart);
+  
+  //res.send(checkOutCart);
+  // res.status(204);
+  // res.json({checkOutCart: checkOutCart})
+  res.status(204).send(checkOutCart);
+});
 
 module.exports = {
   getCart,
   addProductToCart,
   updateProductInCart,
+  checkout,
 };

@@ -54,7 +54,7 @@ const expirytime = process.env.JWT_ACCESS_EXPIRATION_MINUTES;
 const generateAuthTokens = async (user) => {
   const accessTokenExpires =
     Math.floor(Date.now() / 1000) + config.jwt.accessExpirationMinutes * 60;
-  console.log(user)
+  //console.log(user)
   const accessToken = generateToken(
     user._id,
     accessTokenExpires,
