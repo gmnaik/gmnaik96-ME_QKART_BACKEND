@@ -76,7 +76,7 @@ const addProductToCart = async (user, productId, quantity) => {
 
     if(!newCart)
     {
-      throw new ApiError(httpStatus[500],"Internal Server Error");
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR,"Internal Server Error");
     }
 
     productObj = {
@@ -251,59 +251,104 @@ const deleteProductFromCart = async (user, productId) => {
 const checkout = async (user) => {
   //console.log("In checkout function:",user);
   
-  //const userPresent = await User.findOne({email: user.email});
-  const userCartPresent = await Cart.findOne({email: user.email});
+  // //const userPresent = await User.findOne({email: user.email});
+  // const userCartPresent = await Cart.findOne({email: user.email});
   
-  //console.log("User is present",userPresent);
+  // //console.log("User is present",userPresent);
 
-  const addressIsSet = await user.hasSetNonDefaultAddress();
-  //console.log("User.hasSetNonDefaultAddress",addressIsSet);
+  // const addressIsSet = await user.hasSetNonDefaultAddress();
+  // //console.log("User.hasSetNonDefaultAddress",addressIsSet);
 
-  if(!addressIsSet)
-  {
-    throw new ApiError(httpStatus.BAD_REQUEST,'User need to add address');
-  }
+  // if(!addressIsSet)
+  // {
+  //   throw new ApiError(httpStatus.BAD_REQUEST,'User need to add address');
+  // }
 
-  if(!userCartPresent)
-  {
-    throw new ApiError(httpStatus.NOT_FOUND,"User does not have a cart");
-  }
+  // if(!userCartPresent)
+  // {
+  //   throw new ApiError(httpStatus.NOT_FOUND,"User does not have a cart");
+  // }
 
-  let cartProductList = userCartPresent.cartItems;
-  //console.log("Products in cart count",cartProductList.length);
-  if (cartProductList.length == 0)
-  {
-    throw new ApiError(httpStatus.BAD_REQUEST,"Cart is empty.Plz add products to checkout");
-  }
-  else
-  {
-    let cartTotal = 0;
-    let remainingBalanceAfterCheckOut;
-    for(let i=0;i<cartProductList.length;i++)
-    {
-      //console.log("Checkout func:",cartProductList[i]);
-      cartTotal = cartTotal + (cartProductList[i].product.cost * cartProductList[i].quantity);
-      //console.log("Cart total:",cartTotal);
-    }
-    //console.log("Wallet money",user.walletMoney);
+  // let cartProductList = userCartPresent.cartItems;
+  // //console.log("Products in cart count",cartProductList.length);
+  // if (cartProductList.length == 0)
+  // {
+  //   throw new ApiError(httpStatus.BAD_REQUEST,"Cart is empty.Plz add products to checkout");
+  // }
+  // else
+  // {
+  //   let cartTotal = 0;
+  //   let remainingBalanceAfterCheckOut;
+  //   for(let i=0;i<cartProductList.length;i++)
+  //   {
+  //     //console.log("Checkout func:",cartProductList[i]);
+  //     cartTotal = cartTotal + (cartProductList[i].product.cost * cartProductList[i].quantity);
+  //     //console.log("Cart total:",cartTotal);
+  //   }
+  //   //console.log("Wallet money",user.walletMoney);
 
-    if(cartTotal > user.walletMoney)
-    {
-      throw new ApiError(httpStatus.BAD_REQUEST,"Wallet balance is insufficient.Plz add money in wallet");
-    }
-    else
-    {
-      remainingBalanceAfterCheckOut = user.walletMoney - cartTotal;
-      user.walletMoney = remainingBalanceAfterCheckOut;
-      await user.save();
-      cartProductList.splice(0,cartProductList.length);
-      await userCartPresent.save();
-    }
-  }
-  //console.log("User:",user);
-  //console.log("User Cart:",userCartPresent);
+  //   if(cartTotal > user.walletMoney)
+  //   {
+  //     throw new ApiError(httpStatus.BAD_REQUEST,"Wallet balance is insufficient.Plz add money in wallet");
+  //   }
+  //   else
+  //   {
+  //     remainingBalanceAfterCheckOut = user.walletMoney - cartTotal;
+  //     user.walletMoney = remainingBalanceAfterCheckOut;
+  //     await user.save();
+  //     cartProductList.splice(0,cartProductList.length);
+  //     await userCartPresent.save();
+  //   }
+  // }
+  // //console.log("User:",user);
+  // //console.log("User Cart:",userCartPresent);
   
-  return userCartPresent;
+  // return userCartPresent;
+
+
+
+  let cart = await Cart.findOne({ email: user.email });
+  if (cart == null) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not have a cart");
+  }
+
+  // TODO - Test2
+  if (cart.cartItems.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Cart is empty");
+  }
+  
+  // TODO - Test3
+  let hasSetNonDefaultAddress = await user.hasSetNonDefaultAddress();
+  if (!hasSetNonDefaultAddress) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Address not set");
+  }
+  // if (user.address == config.default_address) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, "Address not set");
+  // }
+
+  // TODO - Test4
+  let total = 0;
+  for (let i = 0; i < cart.cartItems.length; i++) {
+    total += cart.cartItems[i].product.cost * cart.cartItems[i].quantity;
+  }
+
+  if (total > user.walletMoney) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "User has insufficient money to process"
+    );
+  }
+
+  // TODO - Test 5
+  user.walletMoney -= total;
+  await user.save();
+
+  cart.cartItems = [];
+  await cart.save();
+
+
+
+
 };
 
 module.exports = {
