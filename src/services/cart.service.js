@@ -346,7 +346,7 @@ const checkout = async (user) => {
   cart.cartItems = [];
   await cart.save();
 
-
+ // return cart;
 
 
 };

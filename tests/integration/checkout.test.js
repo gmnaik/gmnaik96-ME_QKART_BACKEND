@@ -92,6 +92,7 @@ describe("Cart routes", () => {
     it("should return 204 if cart is valid", async () => {
       await insertUsers([userOne]);
       await insertCart([cartWithProductsUserOne]);
+      //await insertCart([emptyCart]);
 
       const res = await request(app)
         .put(`/v1/cart/checkout`)
@@ -100,7 +101,7 @@ describe("Cart routes", () => {
 
       console.log("User of last testcase:",userOne);
       console.log("User cart of last testcase:",cartWithProductsUserOne);
-      console.log("Output of last testcase:",res.checkout);
+      console.log("Output of last testcase final:",res.body);
 
       // TODO: CRIO_TASK_MODULE_TEST - Assert if status code is 204
      
@@ -108,16 +109,23 @@ describe("Cart routes", () => {
 
       // TODO: CRIO_TASK_MODULE_TEST - Get the cart for "userOne" and assert if
       // - Cart exists
-      expect(res.body).toEqual(
-        expect.objectContaining({
-          __v: expect.any(Number),
-          email: userOne.email,
-          cartItems: emptyCart.cartItems,
-          paymentOption: cartWithProductsUserOne.paymentOption,
-        })
-      );
-      // - Length of "cartItems" array is 0
-      expect(res.body.cartItems).toEqual(emptyCart.cartItems);
+      // expect(res.body).toEqual(
+      //   expect.objectContaining({
+      //     __v: expect.any(Number),
+      //     email: userOne.email,
+      //     cartItems: emptyCart.cartItems,
+      //     paymentOption: cartWithProductsUserOne.paymentOption,
+      //   })
+      // );
+      // // - Length of "cartItems" array is 0
+      // expect(res.body.cartItems).toEqual(emptyCart.cartItems);
+
+      const dbCart = await Cart.findOne({ email: userOne.email });
+      expect(dbCart).toBeDefined();
+      expect(dbCart.cartItems.length).toEqual(0);
+
+      //expect(res.body).toEqual({})
+
       
       
     });

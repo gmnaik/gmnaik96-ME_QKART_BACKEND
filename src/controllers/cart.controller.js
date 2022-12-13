@@ -89,7 +89,9 @@ const checkout = catchAsync(async (req, res) => {
   //res.send(checkOutCart);
   // res.status(204);
   // res.json({checkOutCart: checkOutCart})
-  res.status(204).send(checkOutCart);
+  console.log("Checkout in controller",checkOutCart);
+  res.status(httpStatus.NO_CONTENT).send();
+  
 });
 
 module.exports = {
