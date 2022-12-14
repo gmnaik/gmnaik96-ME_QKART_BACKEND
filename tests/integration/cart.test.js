@@ -36,8 +36,6 @@ describe("Cart routes", () => {
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .send();
 
-      
-
       // Check response status code
       expect(res.status).toEqual(httpStatus.OK);
 

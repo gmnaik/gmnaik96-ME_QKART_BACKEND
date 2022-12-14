@@ -439,7 +439,6 @@ export default class Cart extends React.Component {
                 message.error("You must add items to cart first");
               }
             }}
-
           >
             <strong> Checkout</strong>
           </Button>
