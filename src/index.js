@@ -20,7 +20,17 @@ let server;
 
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
     console.log("Connected to MongoDB");
-    server = app.listen(process.env.PORT, () => {
-        console.log(`Listening to port ${process.env.PORT}`);
-    });
 });
+
+app.listen(config.port, () => {
+        console.log(`Listening to port ${config.port}`);
+});
+
+// mongoose
+//   .connect(`${MONGODB_URL}`)
+//   .then(() => console.log("Connected to DB at ", MONGODB_URL))
+//   .catch(() => console.log("Failed to connect to DB at ", MONGODB_URL));
+
+// app.listen(port, () => {
+//   console.log("Listening to port ", port);
+// });
