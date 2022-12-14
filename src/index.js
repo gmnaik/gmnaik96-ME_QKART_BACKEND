@@ -20,7 +20,7 @@ let server;
 
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
     console.log("Connected to MongoDB");
-    server = app.listen(config.port, () => {
-        console.log(`Listening to port ${config.port}`);
+    server = app.listen(process.env.PORT, () => {
+        console.log(`Listening to port ${process.env.PORT}`);
     });
 });
